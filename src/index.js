@@ -9,15 +9,17 @@ const { values } = collection;
 /* Exports */
 export default (baseConfig = {}) => {
 	const { handlers = {}} = baseConfig;
-
-	return {
+	const one = {
 		parse: (configTree) =>
 			(isFunction(configTree)
 				? configTree
 				: values(configTree)
 					.map(
-						(childConfig) => handlers[childConfig.handler](childConfig)
+						(childConfig) =>
+							handlers[childConfig.handler](childConfig, one)
 					)
 					.pop()),
 	};
+
+	return one;
 };

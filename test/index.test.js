@@ -17,7 +17,7 @@ describe('parsing', () => {
 
 	test('child configs of the configTree are passed '
 	+ 'to the respective handlers with the '
-	+ 'childConfigs as the argument', () => {
+	+ 'childConfigs and the core itself as arguments', () => {
 		const handler = jest.fn();
 		const handlerName = 'someHandler';
 		const childConfig = {
@@ -26,16 +26,15 @@ describe('parsing', () => {
 		const testConfig = {
 			someDummyName: childConfig,
 		};
-
-		const { parse } = one({
+		const core = one({
 			handlers: {
 				[handlerName]: handler,
 			},
 		});
 
-		parse(testConfig);
+		core.parse(testConfig);
 
-		expect(handler).toBeCalledWith(childConfig);
+		expect(handler).toBeCalledWith(childConfig, core);
 	});
 
 	test('when there are multiple child configs '
