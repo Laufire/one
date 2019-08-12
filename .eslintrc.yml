@@ -42,7 +42,7 @@ rules:
   func-call-spacing: ["error", "never"]
   func-names: ["error", "as-needed"]
   func-name-matching: ["error", "always"]
-  function-paren-newline: ["error", { "minItems": 3 }]
+  function-paren-newline: ["error", "consistent"]
   func-style: ["error", "expression"]
   id-blacklist: ["error"]
   id-length:

@@ -7,10 +7,60 @@ describe('one', () => {
 });
 
 describe('parsing', () => {
-	test('the passed configTree when it is a function', () => {
+	test('the passed configTree is returned as is,'
+	+ 'when it is a function.', () => {
 		const { parse } = one();
 		const testFunction = () => {};
 
 		expect(parse(testFunction)).toEqual(testFunction);
+	});
+
+	test('child configs of the configTree are passed '
+	+ 'to the respective handlers with the '
+	+ 'childConfigs as the argument', () => {
+		const handler = jest.fn();
+		const handlerName = 'someHandler';
+		const childConfig = {
+			handler: handlerName,
+		};
+		const testConfig = {
+			someDummyName: childConfig,
+		};
+
+		const { parse } = one({
+			handlers: {
+				[handlerName]: handler,
+			},
+		});
+
+		parse(testConfig);
+
+		expect(handler).toBeCalledWith(childConfig);
+	});
+
+	test('when there are multiple child configs '
+	+ 'the output of the last handler is returned', () => {
+		const handler = jest.fn((config) => config);
+		const handlerName = 'someHandler';
+		const lastChildConfig = {
+			handler: handlerName,
+			someValue: 'someValue',
+		};
+		const testConfig = {
+			firstChild: {
+				handler: handlerName,
+			},
+			lastChild: lastChildConfig,
+		};
+
+		const { parse } = one({
+			handlers: {
+				[handlerName]: handler,
+			},
+		});
+
+		const returned = parse(testConfig);
+
+		expect(returned).toEqual(lastChildConfig);
 	});
 });
