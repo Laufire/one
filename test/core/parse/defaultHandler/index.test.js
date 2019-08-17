@@ -1,4 +1,4 @@
-import defaultHandler from '../../../src/core/parse/defaultHandler';
+import defaultHandler from '../../../../src/core/parse/defaultHandler';
 import { collection } from '@laufire/utils';
 
 /* Helpers */

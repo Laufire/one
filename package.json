@@ -54,6 +54,6 @@
     "test": "test"
   },
   "dependencies": {
-    "@laufire/utils": "0.0.28"
+    "@laufire/utils": "0.0.29"
   }
 }
