@@ -6,11 +6,13 @@ const { patch } = collection;
 
 /* Tests */
 describe('objectHandler', () => {
-	const customHandler = jest.fn();
-	const customHandlerName = 'someHandler';
+	const ctx = Symbol('ctx');
+	const childHandlerResult = Symbol('customReturnValue');
+	const childHandler = jest.fn(() => childHandlerResult);
+	const childHandlerName = 'childHandler';
 	const mockCoreBase = {
 		handlers: {
-			[customHandlerName]: customHandler,
+			[childHandlerName]: childHandler,
 		},
 	};
 
@@ -18,44 +20,70 @@ describe('objectHandler', () => {
 		jest.clearAllMocks();
 	});
 
-	test('child configs of the config are passed '
-	+ 'to the respective handlers, inferred from the config name '
-	+ 'with the childConfigs and the core itself as arguments', () => {
+	test('object configs return a handler function'
+	+ 'which collects the results from the children', () => {
+		const childConfig = {
+			handler: childHandlerName,
+		};
+		const config = {
+			someHandlerName: childConfig,
+		};
+		const mockCore = patch(mockCoreBase, {
+			config,
+		});
+
+		const returned = objectHandler(config, mockCore);
+		const result = returned(ctx);
+
+		expect(result).toEqual({
+			someHandlerName: childHandlerResult,
+		});
+	});
+
+	test('when a handler is not mentioned it\'s inferred from'
+	+ ' the name of the children ', () => {
 		const childConfig = {};
 		const config = {
-			[customHandlerName]: childConfig,
+			[childHandlerName]: childConfig,
 		};
 		const mockCore = patch(mockCoreBase, {
 			config,
 		});
 
-		objectHandler(config, mockCore);
+		const handler = objectHandler(config, mockCore);
 
-		expect(customHandler).toBeCalledWith(childConfig, mockCore);
+		handler(ctx);
+
+		expect(childHandler).toBeCalledWith({ ctx });
 	});
 
-	test('child configs of the config are passed '
-	+ 'to the respective handlers, got from the key, handler'
-	+ 'with the childConfigs and the core itself as arguments', () => {
+	test('handlers receive the results of the preceding handlers', () => {
 		const childConfig = {
-			handler: customHandlerName,
+			handler: childHandlerName,
 		};
 		const config = {
-			someOtherName: childConfig,
+			firstChild: childConfig,
+			secondChild: childConfig,
 		};
 		const mockCore = patch(mockCoreBase, {
 			config,
 		});
 
-		objectHandler(config, mockCore);
+		const handler = objectHandler(config, mockCore);
 
-		expect(customHandler).toBeCalledWith(childConfig, mockCore);
+		handler(ctx);
+
+		expect(childHandler).toHaveBeenNthCalledWith(1, { ctx });
+		expect(childHandler).toHaveBeenNthCalledWith(2, {
+			ctx: ctx, firstChild: childHandlerResult,
+		});
 	});
 
-	test('handlers are optionals, which default to the defaultHandler', () => {
-		const handler = () => {};
+	test.skip('the defaultHandler is used when a'
+	+ ' handlers is unresolved', () => {
+		const someReturnValue = Symbol('someReturnValue');
 		const childConfig = {
-			someKey: () => handler,
+			someKey: () => someReturnValue,
 		};
 		const config = {
 			notAHandlerName: childConfig,
@@ -64,30 +92,8 @@ describe('objectHandler', () => {
 			config,
 		});
 
-		const returned = objectHandler(config, mockCore);
+		const handler = objectHandler(config, mockCore);
 
-		expect(returned).toEqual(handler);
-	});
-
-	test('when there are multiple child configs '
-	+ 'the output of the last handler is returned', () => {
-		const someSymbol = Symbol('someSymbol');
-		const modifiedCore = patch(mockCoreBase, {
-			handlers: {
-				lastHandler: () => someSymbol,
-			},
-		});
-		const testConfig = {
-			firstChild: {
-				handler: customHandlerName,
-			},
-			lastChild: {
-				handler: 'lastHandler',
-			},
-		};
-
-		const returned = objectHandler(testConfig, modifiedCore);
-
-		expect(returned).toEqual(someSymbol);
+		expect(handler()).toEqual(someReturnValue);
 	});
 });
