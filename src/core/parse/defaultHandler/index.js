@@ -3,8 +3,8 @@
  */
 
 import { reflection } from '@laufire/utils';
-import functionType from "./types/function";
-import objectType from "./types/object";
+import functionType from './types/function';
+import objectType from './types/object';
 
 /* Helpers */
 const { inferType } = reflection;

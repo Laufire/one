@@ -1,4 +1,4 @@
 /**
  * Default Handler for config type, function.
  */
-export default (config) => config;
+export default (config, core) => config(config, core);
