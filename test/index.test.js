@@ -7,33 +7,33 @@ jest.mock('../src/core/parse', () => jest.fn());
 /* Tests */
 describe('one', () => {
 	test('initializing', () => {
-		const handlers = {};
+		const types = {};
 		const config = {
-			handlers,
+			types,
 		};
 		const childConfig = {};
-		const childHandlerName = '';
+		const childTypeName = '';
 
 		const initialized = one(config);
 
 		expect(initialized).toEqual({
 			config: config,
-			handlers: handlers,
 			parse: expect.any(Function),
+			types: types,
 		});
 
-		initialized.parse(childConfig, childHandlerName);
+		initialized.parse(childConfig, childTypeName);
 		expect(parse)
-			.toHaveBeenCalledWith(childConfig, childHandlerName, initialized);
+			.toHaveBeenCalledWith(childConfig, childTypeName, initialized);
 	});
 
 	test('config is an optional argument', () => {
 		expect(one()).toEqual(expect.any(Object));
 	});
 
-	test('config.handlers is an optional argument', () => {
-		const assignedHandlers = one({}).handlers;
+	test('config.types is an optional argument', () => {
+		const assignedTypes = one({}).types;
 
-		expect(assignedHandlers).toEqual({});
+		expect(assignedTypes).toEqual({});
 	});
 });

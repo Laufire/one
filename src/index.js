@@ -6,8 +6,8 @@ import parse from './core/parse';
 export default (baseConfig = {}) => {
 	const core = {
 		config: baseConfig,
-		handlers: baseConfig.handlers || {},
-		parse: (config, handlerName) => parse(config, handlerName, core),
+		parse: (config, typeName) => parse(config, typeName, core),
+		types: baseConfig.types || {},
 	};
 
 	return core;

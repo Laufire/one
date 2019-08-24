@@ -1,13 +1,13 @@
-import functionHandler from '../../../../../src/core/parse/defaultHandler/types/function'; // eslint-disable-line max-len
+import functionParser from '../../../../../src/core/parse/defaultParser/typeParsers/function'; // eslint-disable-line max-len
 
-test('configs passed to the defaultHandler are returned as is, '
+test('configs passed to the defaultParser are returned as is, '
 	+ 'when they are functions', () => {
-	const handlerFunction = () => {};
+	const typeHandler = () => {};
 	const mockCore = Symbol('Mock Core');
-	const config = jest.fn(() => handlerFunction);
+	const config = jest.fn(() => typeHandler);
 
-	const returnedHandler = functionHandler(config, mockCore);
+	const returnedType = functionParser(config, mockCore);
 
 	expect(config).toBeCalledWith(config, mockCore);
-	expect(returnedHandler).toEqual(handlerFunction);
+	expect(returnedType).toEqual(typeHandler);
 });

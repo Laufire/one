@@ -1,29 +1,29 @@
 import parse from '../../../src/core/parse';
-import defaultHandler from '../../../src/core/parse/defaultHandler';
+import defaultParser from '../../../src/core/parse/defaultParser';
 import { collection } from '@laufire/utils';
 
 /* Mocks and Stubs */
-jest.mock('../../../src/core/parse/defaultHandler', () => jest.fn());
+jest.mock('../../../src/core/parse/defaultParser', () => jest.fn());
 
 /* Helpers */
 const { patch } = collection;
 
 /* Tests */
 describe('parsing', () => {
-	const customHandler = jest.fn();
-	const customHandlerName = 'someHandler';
+	const customType = jest.fn();
+	const customTypeName = 'someType';
 	const childConfig = {
-		handler: customHandlerName,
+		type: customTypeName,
 	};
 	const config = {
 		someDummyName: childConfig,
 	};
-	const handlers = {
-		[customHandlerName]: customHandler,
+	const types = {
+		[customTypeName]: customType,
 	};
 	const core = {
 		config,
-		handlers,
+		types,
 	};
 
 	beforeEach(() => {
@@ -31,34 +31,34 @@ describe('parsing', () => {
 	});
 
 	test('parse passes the configs and the core '
-	+ 'to the specified handler', () => {
+	+ 'to the specified type', () => {
 		const someConfig = {};
 
-		parse(someConfig, customHandlerName, core);
+		parse(someConfig, customTypeName, core);
 
-		expect(customHandler).toHaveBeenCalledWith(someConfig, core);
-		expect(customHandler).toHaveBeenCalledTimes(1);
+		expect(customType).toHaveBeenCalledWith(someConfig, core);
+		expect(customType).toHaveBeenCalledTimes(1);
 	});
 
 	test('parse passes the configs and the core '
-	+ 'to the handler specified in the config', () => {
-		const configWithHandler = patch(config, {
-			handler: customHandlerName,
+	+ 'to the type specified in the config', () => {
+		const configWithType = patch(config, {
+			type: customTypeName,
 		});
 
-		parse(configWithHandler, undefined, core);
+		parse(configWithType, undefined, core);
 
-		expect(customHandler).toHaveBeenCalledWith(configWithHandler, core);
-		expect(customHandler).toHaveBeenCalledTimes(1);
+		expect(customType).toHaveBeenCalledWith(configWithType, core);
+		expect(customType).toHaveBeenCalledTimes(1);
 	});
 
 	test('parse passes the configs and the core '
-	+ 'to the defaultHandler when no handler is specified', () => {
+	+ 'to the defaultParser when no type is specified', () => {
 		const someConfig = {};
 
 		parse(someConfig, undefined, core);
 
-		expect(defaultHandler).toHaveBeenCalledWith(someConfig, core);
-		expect(defaultHandler).toHaveBeenCalledTimes(1);
+		expect(defaultParser).toHaveBeenCalledWith(someConfig, core);
+		expect(defaultParser).toHaveBeenCalledTimes(1);
 	});
 });

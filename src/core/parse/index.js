@@ -2,10 +2,10 @@
  * The Parser
  */
 
-import defaultHandler from './defaultHandler';
+import defaultParser from './defaultParser';
 
 /* Exports */
-export default (config, handlerName, core) =>
-	(core.handlers[
-		handlerName || config.handler
-	] || defaultHandler)(config, core);
+export default (config, typeName, core) =>
+	(core.types[
+		typeName || config.type
+	] || defaultParser)(config, core);
