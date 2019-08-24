@@ -7,7 +7,7 @@ export default (baseConfig = {}) => {
 	const core = {
 		config: baseConfig,
 		parse: (config, typeName) => parse(config, typeName, core),
-		types: baseConfig.types || {},
+		types: { ...baseConfig.types },
 	};
 
 	return core;
