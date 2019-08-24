@@ -15,8 +15,6 @@ const typeParsers = {
 	object: objectParser,
 };
 
-/* Functions */
-const defaultParser = (config, core) =>
+/* Exports */
+export default (config, core) =>
 	typeParsers[inferType(config)](config, core);
-
-export default defaultParser;

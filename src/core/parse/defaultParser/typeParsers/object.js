@@ -8,15 +8,17 @@ import { collection } from '@laufire/utils';
 const { collect } = collection;
 
 export default (config, core) => {
-	const childTypes = collect(config,
-		(childConfig, configName) => core.types[childConfig.type || configName]
-		// TODO: The defaultParser is dynamically imported, to avoid circular dependencies. Find a way to fix this.
-		|| require('../index').default);
+	const childHandlers = collect(config,
+		(childConfig, configName) => (
+			core.types[childConfig.type || configName]
+			// TODO: The defaultParser is dynamically imported, to avoid circular dependencies. Find a way to fix this.
+			|| require('../index').default
+		)(childConfig, core));
 
 	return (ctx) => {
 		const scope = {};
 
-		return collect(childTypes, (type, typeName) =>
+		return collect(childHandlers, (type, typeName) =>
 			(scope[typeName] = type({ ctx, ...scope })));
 	};
 };
