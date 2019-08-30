@@ -1,6 +1,6 @@
 {
   "name": "@laufire/one",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A simple node library to help with declarative programming.",
   "main": "./dist/index.js",
   "scripts": {
