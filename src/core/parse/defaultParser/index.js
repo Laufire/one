@@ -5,6 +5,7 @@
 import { reflection } from '@laufire/utils';
 import functionParser from './typeParsers/function';
 import objectParser from './typeParsers/object';
+import stringParser from './typeParsers/string';
 
 /* Helpers */
 const { inferType } = reflection;
@@ -13,6 +14,7 @@ const { inferType } = reflection;
 const typeParsers = {
 	function: functionParser,
 	object: objectParser,
+	string: stringParser,
 };
 
 /* Exports */
