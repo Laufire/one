@@ -1,12 +1,8 @@
 import parse from '../../../src/core/parse';
 import defaultParser from '../../../src/core/parse/defaultParser';
-import { collection } from '@laufire/utils';
 
 /* Mocks and Stubs */
 jest.mock('../../../src/core/parse/defaultParser', () => jest.fn());
-
-/* Helpers */
-const { patch } = collection;
 
 /* Tests */
 describe('parsing', () => {
@@ -31,24 +27,14 @@ describe('parsing', () => {
 	});
 
 	test('parse passes the configs and the core '
-	+ 'to the specified type', () => {
-		const someConfig = {};
+	+ 'to the specified type handler', () => {
+		const someConfig = {
+			type: customTypeName,
+		};
 
-		parse(someConfig, customTypeName, core);
+		parse(someConfig, core);
 
 		expect(customType).toHaveBeenCalledWith(someConfig, core);
-		expect(customType).toHaveBeenCalledTimes(1);
-	});
-
-	test('parse passes the configs and the core '
-	+ 'to the type specified in the config', () => {
-		const configWithType = patch(config, {
-			type: customTypeName,
-		});
-
-		parse(configWithType, undefined, core);
-
-		expect(customType).toHaveBeenCalledWith(configWithType, core);
 		expect(customType).toHaveBeenCalledTimes(1);
 	});
 
@@ -56,7 +42,7 @@ describe('parsing', () => {
 	+ 'to the defaultParser when no type is specified', () => {
 		const someConfig = {};
 
-		parse(someConfig, undefined, core);
+		parse(someConfig, core);
 
 		expect(defaultParser).toHaveBeenCalledWith(someConfig, core);
 		expect(defaultParser).toHaveBeenCalledTimes(1);
