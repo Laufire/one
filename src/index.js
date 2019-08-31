@@ -4,10 +4,12 @@ import parse from './core/parse';
 
 /* Exports */
 export default (baseConfig = {}) => {
+	const types = baseConfig.types || {};
+
 	const core = {
-		config: baseConfig,
-		parse: (config, typeName) => parse(config, typeName, core),
-		types: { ...baseConfig.types },
+		config: { ...baseConfig, types },
+		parse: (config) => parse(config, core),
+		types: types,
 	};
 
 	return core;

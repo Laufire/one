@@ -12,8 +12,6 @@ describe('one', () => {
 			types,
 		};
 		const childConfig = {};
-		const childTypeName = '';
-
 		const initialized = one(config);
 
 		expect(initialized).toEqual({
@@ -22,9 +20,9 @@ describe('one', () => {
 			types: types,
 		});
 
-		initialized.parse(childConfig, childTypeName);
+		initialized.parse(childConfig);
 		expect(parse)
-			.toHaveBeenCalledWith(childConfig, childTypeName, initialized);
+			.toHaveBeenCalledWith(childConfig, initialized);
 	});
 
 	test('config is an optional argument', () => {
